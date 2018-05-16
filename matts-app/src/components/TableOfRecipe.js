@@ -19,11 +19,11 @@ export default class TableOfRecipe extends Component {
             currentRecipe: recipe
         });
         if ( !this.state.selectedRecipe.includes(recipeName) ) {
-            let ary = []
+            let ary = [];
             if (this.state.selectedRecipe.length){
                 ary = [...this.state.selectedRecipe, recipeName].sort();
             } else {
-                ary = [recipeName]
+                ary = [recipeName];
             }
             this.setState({
                 selectedRecipe: ary
