@@ -5,13 +5,19 @@ export default class TableOfRecipe extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            selectedRecipe: []
+            selectedRecipe: [],
+            currentRecipe: {}
         }
         this._storeSelectedRecipe = this._storeSelectedRecipe.bind(this);
-        this._clearSelectedRecipe = this._clearSelectedRecipe.bind(this);  
+        this._clearSelectedRecipe = this._clearSelectedRecipe.bind(this);
+        this._sortArray = this._sortArray.bind(this);
     }
     
-    _storeSelectedRecipe(recipeName){
+    _storeSelectedRecipe(recipe){
+        const recipeName = recipe && recipe.name
+        this.setState({
+            currentRecipe: recipe
+        });
         if ( !this.state.selectedRecipe.includes(recipeName) ) {
             let ary = []
             if (this.state.selectedRecipe.length){
@@ -31,7 +37,12 @@ export default class TableOfRecipe extends Component {
         });
     }
 
+    _sortArray(ary){
+        return ary.sort().join(", ");
+    }
+
     render() {
+        const { selectedRecipe, currentRecipe } = this.state;
         return(
             <div id="table-of-recipes">
                 <div id="recipesButton">
@@ -39,7 +50,7 @@ export default class TableOfRecipe extends Component {
                     this.props.recipes.map(res =>
                         <li key={res.name}>
                             <button onClick={() => {
-                                this._storeSelectedRecipe(res.name);
+                                this._storeSelectedRecipe(res);
                             }}>
                                 {res.name}
                             </button>
@@ -48,11 +59,23 @@ export default class TableOfRecipe extends Component {
                 }
                 </div>
                 <br />
-                <div id="recipesForm">
-                    Selected Recipes: {this.state.selectedRecipe.join()}
-                    <br />
-                    <button onClick={this._clearSelectedRecipe}>Clear</button>
+                <div id="currentRecipe">
+                    CurrentRecipe: {currentRecipe.name}
                 </div>
+                <br />
+                <div>
+                    CurrentRecipe ingredient: 
+                    { currentRecipe && currentRecipe.ingredients && 
+                       this._sortArray(currentRecipe.ingredients)
+                    }
+                   
+                </div>
+                <br />
+                <div id="recipesForm">
+                    Selected Recipes: {selectedRecipe.join(", ")}
+                </div>
+                <br />
+                <button onClick={this._clearSelectedRecipe}>Clear</button>
             </div>
         )
     }
